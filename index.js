@@ -120,7 +120,7 @@ questions = [
     },
     {
         type: 'input',
-        name: 'department_Id',
+        name: 'department_id',
         message: 'What Is The New Department ID?',
         when: ans => {
             if (ans.auColRole) {
@@ -228,7 +228,7 @@ inquirer.prompt(questions)
                 query.insert('role',{
                     title: ans.title,
                     salary: ans.salary,
-                    department_id: ans.departId
+                    department_id: ans.department_id
                 },
                 data => console.log(data));
                 query.select('*','role',data => console.table(data));
@@ -236,10 +236,10 @@ inquirer.prompt(questions)
                 break;    
                 case 'Add Employees':
                 query.insert('employee',{
-                    first_name: ans.firstName,
-                    last_name: ans.lastName,
-                    role_id: ans.roleId,
-                    manager_id: ans.managerId
+                    first_name: ans.first_name,
+                    last_name: ans.last_name,
+                    role_id: ans.role_id,
+                    manager_id: ans.manager_id
                 },
                 data => console.log(data));
                 query.select('*','employee',data => console.table(data));
@@ -266,7 +266,7 @@ inquirer.prompt(questions)
                     break;
                 case 'Update Roles':
                     let arr = Object.entries(ans);
-                    let roleColumnsArr = arr.filter(el => el[0] === 'title' || el[0] === 'salary' || el[0] === 'department_Id' );
+                    let roleColumnsArr = arr.filter(el => el[0] === 'title' || el[0] === 'salary' || el[0] === 'department_id' );
                     let roleColumnsObj = {};
                     for(let el of roleColumnsArr) {roleColumnsObj[el[0]] = el[1]};
                     query.update('role',[roleColumnsObj,{[ans.uColRoleChoice]: ans.uColData}],data => console.log(data));
