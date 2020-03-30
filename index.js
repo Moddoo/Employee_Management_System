@@ -224,8 +224,11 @@ questions = [
 
 inquirer.prompt(questions)
         .then(ans => {
+            figlet("Moddoo App", (err, data) => {
+                if (err) throw err;
+                console.log(data);
+              });
             console.log(ans);
-
             switch(ans.viewChoices) {
                 case 'View Employees by Column':
                     let q = `SELECT * FROM employee WHERE ?`;
@@ -350,4 +353,3 @@ inquirer.prompt(questions)
                     break;
             }
 })
- 

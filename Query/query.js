@@ -6,7 +6,7 @@ class Query {
         host: "localhost",
         port: 3306,
         user: "root",
-        password: "Ss656724378",
+        password: "",
         database: "employees_DB"
       });
    } ;
