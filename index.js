@@ -14,7 +14,8 @@ questions = [
              'View departments, roles, employees',
              'Add departments, roles, employees',
              'Update departments, roles, employees',
-             'Delete departments, roles, employees' 
+             'Delete departments, roles, employees',
+             'View Budgets'
                  ],         
     },
     {
@@ -22,7 +23,7 @@ questions = [
         name: 'viewChoices',
         message: 'Choose One Option From The List?',
         choices: [
-             'View Departments','View Roles', 'View Employees'
+             'View Departments','View Roles', 'View Employees', 'View Employees by Column'
                  ],
         when: ans => ans.choices === 'View departments, roles, employees',
     },
@@ -72,6 +73,15 @@ questions = [
              'Delete Departments','Delete Roles', 'Delete Employees', 'Delete All'
         ],
         when: ans => ans.choices === 'Delete departments, roles, employees'
+    },
+    {
+        type: 'list',
+        name: 'budget',
+        message: 'Choose One Option From The List?',
+        choices: [
+             'View Detailed Budget','View Total Budget'
+        ],
+        when: ans => ans.choices === 'View Budgets'
     },
     {
         type: 'input',
@@ -131,7 +141,7 @@ questions = [
     {
         type: 'list',
         name: 'uColRoleChoice' ,
-        message: 'Select A Column To Help Us Target The Row You Want To Change?',
+        message: 'Select A Column To Help Us Target The Row You Want?',
         choices: ['title','salary','department_id'],
         when:  ans => ans.updateChoices === 'Update Roles' ||
                       ans.deleteChoices === 'Delete Roles'
@@ -190,15 +200,16 @@ questions = [
     {
         type: 'list',
         name: 'uColEmployeeChoice' ,
-        message: 'Select A Column To Help Us Target The Row You Want To Change?',
+        message: 'Select A Column To Help Us Target The Row You Want?',
         choices: ['first_name','last_name','role_id','manager_id'],
         when:  ans => ans.updateChoices === 'Update Employees' ||
-                      ans.deleteChoices === 'Delete Employees'
+                      ans.deleteChoices === 'Delete Employees' ||
+                      ans.viewChoices === 'View Employees by Column'
     },
     {
         type: 'input',
         name: 'uColData',
-        message: 'Write Accurate Data For The Selected Column To (Update,Delete) The Row ==>',
+        message: 'Write Accurate Data For The Selected Column To (View,Update,Delete) The Row ==>',
         when: ans => ans.uColRoleChoice ||
                      ans.uColEmployeeChoice
     },
@@ -213,8 +224,20 @@ questions = [
 
 inquirer.prompt(questions)
         .then(ans => {
-    console.log(ans);
-        if(ans.addChoices) {
+            console.log(ans);
+
+            switch(ans.viewChoices) {
+                case 'View Employees by Column':
+                    let q = `SELECT * FROM employee WHERE ?`;
+                    query.custom(q,
+                        {
+                            [ans.uColEmployeeChoice]: ans.uColData
+                        },
+                        data => console.table(data));   
+                        query.connection.end();
+                        break;
+            }
+
             switch(ans.addChoices) {
                 case 'Add Departments': 
                 query.insert('department',{
@@ -246,10 +269,7 @@ inquirer.prompt(questions)
                 query.connection.end();
                 break;    
             }
-        };
-
-
-        if(ans.updateChoices) {
+        
             switch(ans.updateChoices) {
                 case 'Update Departments':
                     query.update('department',[
@@ -283,10 +303,7 @@ inquirer.prompt(questions)
                     query.connection.end();
                     break;
             }
-        }
-
         
-        if(ans.deleteChoices) {
             switch(ans.deleteChoices) {
                 case 'Delete Departments':
                     query.delete('department',
@@ -321,6 +338,16 @@ inquirer.prompt(questions)
                     query.connection.end();
                     break;
             }
-        }
+
+            switch(ans.budget) {
+                case 'View Detailed Budget':
+                    query.detailedBudget(data => console.table(data));
+                    query.connection.end();
+                    break;
+                case 'View Total Budget':
+                    query.totalBudget(data => console.table(data));
+                    query.connection.end();
+                    break;
+            }
 })
  

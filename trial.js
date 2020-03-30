@@ -48,22 +48,26 @@ const query = new Query();
 // query.select('first_name, last_name','employee',data => console.table(data)) 
 // query.select('*','department',data => console.table(data)) ;
 
-let x = {
-    choices: 'Update departments, roles, employees',
-    updateChoices: 'Update Roles',
-    auColRole: [ 'Title', 'Salary', 'Department ID' ],
-    title: 'moddoo',
-    salary: '333',
-    departId: '2',
-    uColRoleChoice: 'Department ID',
-    uColData: '4'
-}
-let y = Object.entries(x).filter(el => el[0] == 'title' || el[0] == 'salary' || el[0] == 'departId' );
-let z = {};
-for(el of y) {
-    console.log(el[0]);
-    z[el[0]] = el[1]
-};
-console.log(Object.entries(x))
-console.log(y)
-console.log(z)
+// let x = {
+//     choices: 'Update departments, roles, employees',
+//     updateChoices: 'Update Roles',
+//     auColRole: [ 'Title', 'Salary', 'Department ID' ],
+//     title: 'moddoo',
+//     salary: '333',
+//     departId: '2',
+//     uColRoleChoice: 'Department ID',
+//     uColData: '4'
+// }
+// let y = Object.entries(x).filter(el => el[0] == 'title' || el[0] == 'salary' || el[0] == 'departId' );
+// let z = {};
+// for(el of y) {
+//     console.log(el[0]);
+//     z[el[0]] = el[1]
+// };
+// console.log(Object.entries(x))
+// console.log(y)
+// console.log(z)
+
+connection.query('SELECT * FROM employee 
+                  WHERE ?
+') 

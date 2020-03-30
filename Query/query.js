@@ -47,7 +47,37 @@ class Query {
            if(err) throw err;
            cb("\n DELETED SUCCESSFULLY \n")
        })
-   }
+   };
+
+   detailedBudget(cb) {
+       return this.connection.query(`
+       SELECT  d.name AS department_name, title, count(*) AS no_of_employee, r.salary, sum(r.salary) AS budget
+       FROM department d
+       LEFT JOIN role r
+       ON d.id = r.department_id
+       JOIN employee e
+       ON r.id = e.role_id
+       GROUP BY title
+       ORDER BY budget desc`,
+       (err,data) => {
+           if(err) throw err;
+           cb(data);
+       })
+   };
+    
+   totalBudget(cb) {
+       return this.connection.query(`
+       SELECT count(*) AS no_of_employee, sum(r.salary) AS budget, avg(salary) AS average
+       FROM department d
+       LEFT JOIN role r
+       ON d.id = r.department_id
+       JOIN employee e
+       ON r.id = e.role_id`,
+       (err,data) => {
+           if(err) throw err;
+           cb(data)
+       })
+   };
 
    custom(q,args,cb) {
        return this.connection.query(q,args,
