@@ -28,26 +28,6 @@ questions = [
         when: ans => ans.choices === 'View departments, roles, employees',
     },
     {
-        type: 'input',
-        name: 'show',
-        when:  ans => {
-                switch(ans.viewChoices) {
-                case 'View Departments': 
-                query.select('*','department',data => console.table(data));
-                query.connection.end();
-                break;
-                case 'View Roles': 
-                query.select('*','role',data => console.table(data));
-                query.connection.end();
-                break;
-                case 'View Employees': 
-                query.select('*','employee',data => console.table(data));
-                query.connection.end();
-                break;
-            }
-        }
-    },
-    {
         type: 'list',
         name: 'addChoices',
         message: 'Choose One Option From The List?',
@@ -105,14 +85,14 @@ questions = [
             new inquirer.Separator(' *** Role Columns *** '),
              'Title','Salary','Department ID'
                  ],
-        when:  ans =>  ans.addChoices === 'Add Roles' ||
-                     ans.updateChoices === 'Update Roles',      
+        when:  ans =>  ans.updateChoices === 'Update Roles',      
     },
     {
         type: 'input',
         name: 'title',
         message: 'What Is The New Title Name?',
         when:  ans => {
+            if(ans.addChoices === 'Add Roles') return true;
             if (ans.auColRole) {
                 if(ans.auColRole.indexOf('Title') != -1) return true;
             }
@@ -123,6 +103,7 @@ questions = [
         name: 'salary',
         message: 'What Is The New Salary?',
         when: ans =>  {
+            if(ans.addChoices === 'Add Roles') return true;
             if (ans.auColRole) {
                 if(ans.auColRole.indexOf('Salary') != -1) return true;
             }
@@ -133,6 +114,7 @@ questions = [
         name: 'department_id',
         message: 'What Is The New Department ID?',
         when: ans => {
+            if(ans.addChoices === 'Add Roles') return true;
             if (ans.auColRole) {
                 if(ans.auColRole.indexOf('Department ID') != -1) return true;
             }
@@ -154,14 +136,14 @@ questions = [
             new inquirer.Separator(' *** Employee Columns *** '),
              'First_Name','Last_Name','Role ID','Manager ID'
                  ],
-        when: ans => ans.addChoices === 'Add Employees' ||
-                     ans.updateChoices === 'Update Employees' 
+        when: ans => ans.updateChoices === 'Update Employees' 
     },
     {
         type: 'input',
         name: 'first_name',
         message: 'What Is The New First Name?',
         when:  ans => {
+            if(ans.addChoices === 'Add Employees') return true;
             if(ans.auColEmployee) {
                 if(ans.auColEmployee.indexOf('First_Name') !== -1) return true;
             }
@@ -172,6 +154,7 @@ questions = [
         name: 'last_name',
         message: 'What Is The New Last Name?',
         when:  ans => {
+            if(ans.addChoices === 'Add Employees') return true;
             if(ans.auColEmployee) {
                 if(ans.auColEmployee.indexOf('Last_Name') !== -1) return true;
             }
@@ -182,6 +165,7 @@ questions = [
         name: 'role_id',
         message: 'What Is The New Role ID?',
         when:  ans => {
+            if(ans.addChoices === 'Add Employees') return true;
             if(ans.auColEmployee) {
                 if(ans.auColEmployee.indexOf('Role ID') !== -1) return true;
             }
@@ -192,6 +176,7 @@ questions = [
         name: 'manager_id',
         message: 'What Is The New Manager ID?',
         when:  ans => {
+            if(ans.addChoices === 'Add Employees') return true;
             if(ans.auColEmployee) {
                 if(ans.auColEmployee.indexOf('Manager ID') !== -1) return true;
             }
@@ -222,7 +207,8 @@ questions = [
     }
 ];
 
-inquirer.prompt(questions)
+function promptUser() {
+    inquirer.prompt(questions)
         .then(ans => {
             figlet("Moddoo App", (err, data) => {
                 if (err) throw err;
@@ -230,6 +216,18 @@ inquirer.prompt(questions)
               });
             console.log(ans);
             switch(ans.viewChoices) {
+                case 'View Departments': 
+                query.select('*','department',data => console.table(data));
+                query.connection.end();
+                break;
+                case 'View Roles': 
+                query.select('*','role',data => console.table(data));
+                query.connection.end();
+                break;
+                case 'View Employees': 
+                query.select('*','employee',data => console.table(data));
+                query.connection.end();
+                break;
                 case 'View Employees by Column':
                     let q = `SELECT * FROM employee WHERE ?`;
                     query.custom(q,
@@ -353,3 +351,5 @@ inquirer.prompt(questions)
                     break;
             }
 })
+}
+promptUser()
