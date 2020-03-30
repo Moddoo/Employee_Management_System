@@ -39,7 +39,7 @@ MIT License
 
 ![gif](https://media.giphy.com/media/UQlfYQugD7rmccwlv9/giphy.gif )
 
-[video](https://zoddoo.tinytake.com/tt/NDE2OTY5OV8xMjkyMzQ2NA)
+[video](https://ttprivatenew.s3.amazonaws.com/pulse/zoddoo/attachments/12923464/TinyTake30-03-2020-01-28-24.mp4)
                 
 ## Question
 
